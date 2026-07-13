@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taste Matcher | 인호의 취향 큐레이션</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBg: '#121212',
+                        brandCard: '#1E1E1E',
+                        brandPoint: '#FF4D4D',
+                        brandPointHover: '#E03D3D',
+                        brandText: '#E0E0E0',
+                        brandTextMuted: '#999999',
+                    },
+                    fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #121212; color: #E0E0E0; font-family: 'Noto Sans KR', sans-serif; }
+        
+        /* 현재 활성화된 페이지 링크 스타일 (Active State) */
+        .nav-link.active {
+            color: #FF4D4D !important;
+            font-weight: 700;
+            position: relative;
+        }
+        /* 데스크톱 active 링크 하단 밑줄 포인트 */
+        @media (min-width: 768px) {
+            .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: -6px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #FF4D4D;
+                border-radius: 2px;
+            }
+        }
+        
+        /* 시네마 모드 */
+        body.cinema-mode { background-color: #080808; }
+        body.cinema-mode .bg-brandCard { background-color: #141414; }
+
+        /* 결과 원형 애니메이션 */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 퀴즈 페이드인 애니메이션 */
+        .fade-in-ready { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+        .fade-in-visible { opacity: 1; transform: translateY(0); }
+
+        /* 선택 직후 중복 클릭 방지 표시 */
+        .quiz-option:disabled { cursor: default; }
+        .quiz-option.selected {
+            border-color: #FF4D4D;
+            background: rgba(255, 77, 77, 0.10);
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <header class="fixed top-0 left-0 w-full z-50 bg-brandBg/90 backdrop-blur-md border-b border-white/5 transition-all duration-500">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            
+            <a href="index.html" class="text-xl font-bold tracking-wider text-white hover:text-brandPoint transition flex items-center gap-1">
+                INHO <span class="text-brandPoint">.</span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="index.html" class="nav-link text-brandText hover:text-brandPoint transition py-1">홈</a>
+                
+                <a href="quiz.html" class="nav-link active text-brandText hover:text-brandPoint transition py-1">Taste Matcher</a>
+                
+                <div class="relative group py-4">
+                    <button class="nav-link flex items-center gap-1 text-brandText group-hover:text-brandPoint transition py-1">
+                        <span>Curation</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180"></i>
+                    </button>
+                    
+                    <div class="absolute left-0 top-12 w-48 bg-brandCard border border-white/10 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top -translate-y-2 group-hover:translate-y-0 z-50">
+                        <a href="curation_music.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                            <i data-lucide="music" class="w-3.5 h-3.5 text-brandPoint"></i> 음악 소개 (보법)
+                        </a>
+                        <a href="curation_youtube.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                            <i data-lucide="youtube" class="w-3.5 h-3.5 text-brandPoint"></i> 유튜브 (영크크)
+                        </a>
+                        <a href="curation_insight.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                            <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-brandPoint"></i> 취준 (인사이트)
+                        </a>
+                    </div>
+                </div>
+
+                <a href="guestbook.html" class="nav-link text-brandText hover:text-brandPoint transition py-1">Guestbook</a>
+            </nav>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCinemaMode()" class="p-2 rounded-full hover:bg-white/5 border border-white/10 text-brandTextMuted hover:text-brandPoint transition duration-300" title="시네마 모드 켜기/끄기">
+                    <i id="cinemaIcon" data-lucide="lightbulb" class="w-5 h-5"></i>
+                </button>
+                
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:text-brandPoint focus:outline-none transition">
+                    <i id="hamburgerIcon" data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-brandBg/95 border-b border-white/10 px-6 py-6 space-y-4 animate-fadeIn">
+            <a href="index.html" class="block text-sm font-medium text-brandText hover:text-brandPoint">홈</a>
+            <a href="quiz.html" class="block text-sm font-bold text-brandPoint">Taste Matcher (유사도 검사)</a>
+            
+            <div class="pt-2 border-t border-white/5 space-y-2">
+                <span class="text-[10px] font-bold text-brandTextMuted uppercase tracking-wider">// Curation</span>
+                <a href="curation_music.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                    <i data-lucide="music" class="w-3.5 h-3.5 text-brandPoint"></i> 음악 소개
+                </a>
+                <a href="curation_youtube.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                    <i data-lucide="youtube" class="w-3.5 h-3.5 text-brandPoint"></i> 유튜브 (영크크)
+                </a>
+                <a href="curation_insight.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                    <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-brandPoint"></i> 취준 (인사이트)
+                </a>
+            </div>
+
+            <div class="pt-2 border-t border-white/5">
+                <a href="guestbook.html" class="block text-sm font-medium text-brandText hover:text-brandPoint pt-1">Guestbook (방명록)</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section id="quiz" class="py-24 bg-black/20 border-y border-white/5 relative">
+            <div class="max-w-4xl mx-auto px-6">
+                <div class="text-center max-w-2xl mx-auto mb-12 fade-in-ready fade-in-visible">
+                    <span class="text-brandPoint text-sm font-bold tracking-widest uppercase block mb-3">// INTERACTIVE MINI TEST</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">인호와 나의 취향 싱크로율은?</h2>
+                    <p class="text-brandTextMuted text-sm leading-relaxed">
+                        3가지 질문을 통해 이인호님의 큐레이션 가치관과 방문자님의 콘텐츠 취향이 얼마나 닮아 있는지 지금 바로 테스트해보세요!
+                    </p>
+                </div>
+
+                <div id="quizContainer" class="bg-brandCard rounded-3xl p-8 sm:p-12 border border-white/5 shadow-2xl relative overflow-hidden fade-in-ready fade-in-visible">
+                    
+                    <div class="w-full h-1.5 bg-neutral-800 rounded-full mb-8 relative">
+                        <div id="quizProgress" class="h-full bg-brandPoint rounded-full transition-all duration-300" style="width: 33.333%;"></div>
+                    </div>
+
+                    <div id="quizStepContent" class="space-y-8">
+                        <div>
+                            <span id="questionStep" class="text-xs text-brandPoint font-bold tracking-widest uppercase">Question 01 of 03</span>
+                            <h3 id="questionTitle" class="text-xl sm:text-2xl font-black text-white mt-2 leading-snug">나의 새벽 감성을 촉촉하게 적셔줄 최애 장르는?</h3>
+                        </div>
+
+                        <div id="quizOptions" class="grid grid-cols-1 gap-4">
+                            <!-- JavaScript가 현재 질문의 선택지를 렌더링합니다. -->
+                        </div>
+                    </div>
+
+                    <div id="quizResult" class="hidden text-center space-y-8 py-6">
+                        <div class="relative inline-block">
+                            <div class="w-36 h-36 rounded-full border-4 border-dashed border-brandPoint flex items-center justify-center mx-auto animate-[spin-slow_30s_linear_infinite]"></div>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span id="resultScore" class="text-4xl sm:text-5xl font-black text-white">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <h3 id="resultTitle" class="text-2xl font-black text-brandPoint">결과를 계산하고 있어요</h3>
+                            <p id="resultDesc" class="text-brandTextMuted text-sm max-w-md mx-auto leading-relaxed">세 문항에 답하면 취향 싱크로율을 보여드립니다.</p>
+                        </div>
+
+                        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                            <button onclick="restartQuiz()" class="w-full sm:w-auto px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold rounded-xl transition uppercase tracking-wider">
+                                테스트 다시하기
+                            </button>
+                            <button onclick="goToCuration()" class="w-full sm:w-auto px-6 py-3 bg-brandPoint hover:bg-brandPointHover text-white text-xs font-bold rounded-xl transition uppercase tracking-wider shadow-md shadow-brandPoint/10">
+                                맞춤 큐레이션 감상하기
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const quizData = [
+            {
+                question: '나의 새벽 감성을 촉촉하게 적셔줄 최애 장르는?',
+                options: [
+                    { text: '밤안개 가득한 보이스와 감성 짙은 R&B/힙합', score: 100 },
+                    { text: '어쿠스틱 감성 충만한 잔잔한 인디 발라드', score: 70 },
+                    { text: '드라이브하며 들을 수 있는 신나고 청량한 장르', score: 50 }
+                ]
+            },
+            {
+                question: '유튜브 알고리즘을 볼 때 내가 선호하는 테마는?',
+                options: [
+                    { text: 'B급 자막 감성과 날 것 그대로의 크리에이터 케미', score: 100 },
+                    { text: '인생을 단단하게 채워줄 커리어 가이드 및 동기부여', score: 85 },
+                    { text: '가볍게 보고 지나칠 수 있는 단순 유머 클립', score: 60 }
+                ]
+            },
+            {
+                question: '넷플릭스나 영화 인생작을 선택하는 나의 기준은?',
+                options: [
+                    { text: '마음에 긴 여운을 남기는 섬세한 연출과 세련된 미장센', score: 100 },
+                    { text: '머리를 비우고 깊이 몰입할 수 있는 스피디한 액션/스릴러', score: 75 },
+                    { text: '친구들과 왁자지껄 웃으며 편하게 볼 수 있는 팝콘 무비', score: 60 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+        let isChangingQuestion = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadQuestion();
+        });
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('hamburgerIcon');
+            const willOpen = menu.classList.contains('hidden');
+
+            menu.classList.toggle('hidden');
+            icon.setAttribute('data-lucide', willOpen ? 'x' : 'menu');
+            lucide.createIcons();
+        }
+
+        function toggleCinemaMode() {
+            const body = document.body;
+            const icon = document.getElementById('cinemaIcon');
+            body.classList.toggle('cinema-mode');
+
+            const isCinemaMode = body.classList.contains('cinema-mode');
+            icon.setAttribute('data-lucide', isCinemaMode ? 'moon' : 'lightbulb');
+            icon.parentElement.classList.toggle('bg-brandPoint/15', isCinemaMode);
+            icon.parentElement.classList.toggle('text-brandPoint', isCinemaMode);
+            lucide.createIcons();
+        }
+
+        function loadQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            const questionNumber = currentQuestionIndex + 1;
+            const progress = (questionNumber / quizData.length) * 100;
+
+            document.getElementById('questionStep').textContent =
+                `Question ${String(questionNumber).padStart(2, '0')} of ${String(quizData.length).padStart(2, '0')}`;
+            document.getElementById('questionTitle').textContent = questionData.question;
+            document.getElementById('quizProgress').style.width = `${progress}%`;
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.replaceChildren();
+
+            questionData.options.forEach((option) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'quiz-option w-full text-left p-5 rounded-2xl bg-neutral-900 border border-white/5 hover:border-brandPoint/40 hover:bg-white/5 text-sm text-brandText transition-all duration-300 flex justify-between items-center gap-4 group';
+
+                const label = document.createElement('span');
+                label.textContent = option.text;
+
+                const check = document.createElement('span');
+                check.className = 'shrink-0 w-5 h-5 rounded-full border border-white/20 group-hover:border-brandPoint flex items-center justify-center text-[10px] text-transparent group-hover:text-brandPoint transition';
+                check.textContent = '✓';
+
+                button.append(label, check);
+                button.addEventListener('click', () => selectOption(option.score, button));
+                optionsContainer.appendChild(button);
+            });
+
+            isChangingQuestion = false;
+        }
+
+        function selectOption(score, selectedButton) {
+            if (isChangingQuestion) return;
+            isChangingQuestion = true;
+
+            totalScore += score;
+
+            const optionButtons = document.querySelectorAll('.quiz-option');
+            optionButtons.forEach((button) => {
+                button.disabled = true;
+            });
+            selectedButton.classList.add('selected');
+            selectedButton.querySelector('span:last-child').classList.remove('text-transparent');
+            selectedButton.querySelector('span:last-child').classList.add('text-brandPoint');
+
+            window.setTimeout(() => {
+                if (currentQuestionIndex < quizData.length - 1) {
+                    currentQuestionIndex += 1;
+                    loadQuestion();
+                } else {
+                    showQuizResult();
+                }
+            }, 280);
+        }
+
+        function showQuizResult() {
+            const finalPercent = Math.round(totalScore / quizData.length);
+
+            document.getElementById('quizProgress').style.width = '100%';
+            document.getElementById('quizStepContent').classList.add('hidden');
+            document.getElementById('quizResult').classList.remove('hidden');
+            document.getElementById('resultScore').textContent = `${finalPercent}%`;
+
+            const resultTitle = document.getElementById('resultTitle');
+            const resultDesc = document.getElementById('resultDesc');
+
+            if (finalPercent >= 90) {
+                resultTitle.textContent = '영혼의 취향 쌍둥이! 💥';
+                resultDesc.textContent = `싱크로율 ${finalPercent}%! 인호님의 플레이리스트와 예능 코드를 완벽히 이해하는 소울메이트입니다.`;
+            } else if (finalPercent >= 70) {
+                resultTitle.textContent = '감성 충만한 취향 동반자 🎧';
+                resultDesc.textContent = `싱크로율 ${finalPercent}%! 새벽 감성 음악과 커리어 인사이트를 함께 즐기기에 충분히 닮은 취향입니다.`;
+            } else {
+                resultTitle.textContent = '새로운 취향을 만난 탐험가 🗺️';
+                resultDesc.textContent = `싱크로율 ${finalPercent}%! 서로 다른 취향만큼 새롭게 발견할 콘텐츠가 많은 유형입니다.`;
+            }
+
+            localStorage.setItem('inhoTasteScore', String(finalPercent));
+            isChangingQuestion = false;
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            totalScore = 0;
+            isChangingQuestion = false;
+
+            document.getElementById('quizResult').classList.add('hidden');
+            document.getElementById('quizStepContent').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        function goToCuration() {
+            window.location.href = 'curation_music.html';
+        }
+    </script>
+</body>
+</html>

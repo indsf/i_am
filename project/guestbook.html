@@ -1,0 +1,149 @@
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    brandBg: '#121212',
+                    brandCard: '#1E1E1E',
+                    brandPoint: '#FF4D4D',
+                    brandPointHover: '#E03D3D',
+                    brandText: '#E0E0E0',
+                    brandTextMuted: '#999999',
+                },
+                fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+            }
+        }
+    }
+</script>
+<style>
+    body { background-color: #121212; color: #E0E0E0; font-family: 'Noto Sans KR', sans-serif; }
+    
+    /* 현재 활성화된 페이지 링크 스타일 (Active State) */
+    .nav-link.active {
+        color: #FF4D4D !important;
+        font-weight: 700;
+        position: relative;
+    }
+    /* 데스크톱 active 링크 하단 밑줄 포인트 */
+    @media (min-width: 768px) {
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #FF4D4D;
+            border-radius: 2px;
+        }
+    }
+</style>
+
+<header class="fixed top-0 left-0 w-full z-50 bg-brandBg/90 backdrop-blur-md border-b border-white/5 transition-all duration-500">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        
+        <a href="index.html" class="text-xl font-bold tracking-wider text-white hover:text-brandPoint transition flex items-center gap-1">
+            INHO <span class="text-brandPoint">.</span>
+        </a>
+
+        <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+            <a href="index.html" class="nav-link active text-brandText hover:text-brandPoint transition py-1">홈</a>
+            
+            <a href="quiz.html" class="nav-link text-brandText hover:text-brandPoint transition py-1">Taste Matcher</a>
+            
+            <div class="relative group py-4">
+                <button class="nav-link flex items-center gap-1 text-brandText group-hover:text-brandPoint transition py-1">
+                    <span>Curation</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180"></i>
+                </button>
+                
+                <div class="absolute left-0 top-12 w-48 bg-brandCard border border-white/10 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top -translate-y-2 group-hover:translate-y-0 z-50">
+                    <a href="curation_music.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                        <i data-lucide="music" class="w-3.5 h-3.5 text-brandPoint"></i> 음악 소개 (보법)
+                    </a>
+                    <a href="curation_youtube.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                        <i data-lucide="youtube" class="w-3.5 h-3.5 text-brandPoint"></i> 유튜브 (영크크)
+                    </a>
+                    <a href="curation_insight.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-brandPoint"></i> 취준 (인사이트)
+                    </a>
+                </div>
+            </div>
+
+            <a href="guestbook.html" class="nav-link text-brandText hover:text-brandPoint transition py-1">Guestbook</a>
+        </nav>
+        
+        <div class="flex items-center gap-3">
+            <button onclick="toggleCinemaMode()" class="p-2 rounded-full hover:bg-white/5 border border-white/10 text-brandTextMuted hover:text-brandPoint transition duration-300" title="시네마 모드 켜기/끄기">
+                <i id="cinemaIcon" data-lucide="lightbulb" class="w-5 h-5"></i>
+            </button>
+            
+            <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:text-brandPoint focus:outline-none transition">
+                <i id="hamburgerIcon" data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden bg-brandBg/95 border-b border-white/10 px-6 py-6 space-y-4 animate-fadeIn">
+        <a href="index.html" class="block text-sm font-bold text-brandPoint">홈</a>
+        <a href="quiz.html" class="block text-sm font-medium text-brandText hover:text-brandPoint">Taste Matcher (유사도 검사)</a>
+        
+        <div class="pt-2 border-t border-white/5 space-y-2">
+            <span class="text-[10px] font-bold text-brandTextMuted uppercase tracking-wider">// Curation</span>
+            <a href="curation_music.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                <i data-lucide="music" class="w-3.5 h-3.5 text-brandPoint"></i> 음악 소개
+            </a>
+            <a href="curation_youtube.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                <i data-lucide="youtube" class="w-3.5 h-3.5 text-brandPoint"></i> 유튜브 (영크크)
+            </a>
+            <a href="curation_insight.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-brandPoint"></i> 취준 (인사이트)
+            </a>
+        </div>
+
+        <div class="pt-2 border-t border-white/5">
+            <a href="guestbook.html" class="block text-sm font-medium text-brandText hover:text-brandPoint pt-1">Guestbook (방명록)</a>
+        </div>
+    </div>
+</header>
+
+<script>
+    // 아이콘 초기화
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+    });
+
+    // 모바일 햄버거 메뉴 토글
+    function toggleMobileMenu() {
+        const menu = document.getElementById('mobileMenu');
+        const icon = document.getElementById('hamburgerIcon');
+        
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            icon.setAttribute('data-lucide', 'x');
+        } else {
+            menu.classList.add('hidden');
+            icon.setAttribute('data-lucide', 'menu');
+        }
+        lucide.createIcons();
+    }
+
+    // 시네마 모드 토글 (기존 로직 유지)
+    function toggleCinemaMode() {
+        const body = document.body;
+        const icon = document.getElementById('cinemaIcon');
+        body.classList.toggle('cinema-mode');
+        
+        if(body.classList.contains('cinema-mode')) {
+            icon.setAttribute('data-lucide', 'moon');
+            icon.parentElement.classList.add('bg-brandPoint/15', 'text-brandPoint');
+        } else {
+            icon.setAttribute('data-lucide', 'lightbulb');
+            icon.parentElement.classList.remove('bg-brandPoint/15', 'text-brandPoint');
+        }
+        lucide.createIcons();
+    }
+</script>

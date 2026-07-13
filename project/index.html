@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INHO | 이인호의 취향 상자</title>
+    
+    <!-- [필수] 확정된 네비게이션 바 의존성 스크립트 및 스타일 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBg: '#121212',
+                        brandCard: '#1E1E1E',
+                        brandPoint: '#FF4D4D',
+                        brandPointHover: '#E03D3D',
+                        brandText: '#E0E0E0',
+                        brandTextMuted: '#999999',
+                    },
+                    fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #121212; color: #E0E0E0; font-family: 'Noto Sans KR', sans-serif; overflow-x: hidden; }
+        
+        /* 현재 활성화된 페이지 링크 스타일 (Active State) */
+        .nav-link.active {
+            color: #FF4D4D !important;
+            font-weight: 700;
+            position: relative;
+        }
+        /* 데스크톱 active 링크 하단 밑줄 포인트 */
+        @media (min-width: 768px) {
+            .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: -6px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background-color: #FF4D4D;
+                border-radius: 2px;
+            }
+        }
+
+        /* 커스텀 스크롤바 & 앰비언트 글로우 */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #121212; }
+        ::-webkit-scrollbar-thumb { background: #2E2E2E; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF4D4D; }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- ================================================================= -->
+    <!-- [확정된 네비게이션 바 코드 (절대 수정 없음 / '홈' active 적용)] -->
+    <!-- ================================================================= -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-brandBg/90 backdrop-blur-md border-b border-white/5 transition-all duration-500">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            
+            <a href="index.html" class="text-xl font-bold tracking-wider text-white hover:text-brandPoint transition flex items-center gap-1">
+                INHO <span class="text-brandPoint">.</span>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <!-- 현재 보고 있는 홈(index.html) 페이지 강조 -->
+                <a href="index.html" class="nav-link active text-brandText hover:text-brandPoint transition py-1">홈</a>
+                
+                <a href="quiz.html" class="nav-link text-brandText hover:text-brandPoint transition py-1">Taste Matcher</a>
+                
+                <div class="relative group py-4">
+                    <button class="nav-link flex items-center gap-1 text-brandText group-hover:text-brandPoint transition py-1">
+                        <span>Curation</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-300 group-hover:rotate-180"></i>
+                    </button>
+                    
+                    <div class="absolute left-0 top-12 w-48 bg-brandCard border border-white/10 rounded-2xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top -translate-y-2 group-hover:translate-y-0 z-50">
+                        <a href="curation_music.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                            <i data-lucide="music" class="w-3.5 h-3.5 text-brandPoint"></i> 음악 소개 (보법)
+                        </a>
+                        <a href="curation_youtube.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                            <i data-lucide="youtube" class="w-3.5 h-3.5 text-brandPoint"></i> 유튜브 (영크크)
+                        </a>
+                        <a href="curation_insight.html" class="block px-4 py-2.5 text-xs font-medium text-brandText hover:bg-white/5 hover:text-brandPoint transition flex items-center gap-2">
+                            <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-brandPoint"></i> 취준 (인사이트)
+                        </a>
+                    </div>
+                </div>
+
+                <a href="guestbook.html" class="nav-link text-brandText hover:text-brandPoint transition py-1">Guestbook</a>
+            </nav>
+            
+            <div class="flex items-center gap-3">
+                <button onclick="toggleCinemaMode()" class="p-2 rounded-full hover:bg-white/5 border border-white/10 text-brandTextMuted hover:text-brandPoint transition duration-300" title="시네마 모드 켜기/끄기">
+                    <i id="cinemaIcon" data-lucide="lightbulb" class="w-5 h-5"></i>
+                </button>
+                
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-white hover:text-brandPoint focus:outline-none transition">
+                    <i id="hamburgerIcon" data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden bg-brandBg/95 border-b border-white/10 px-6 py-6 space-y-4 animate-fadeIn">
+            <a href="index.html" class="block text-sm font-bold text-brandPoint">홈</a>
+            <a href="quiz.html" class="block text-sm font-medium text-brandText hover:text-brandPoint">Taste Matcher (유사도 검사)</a>
+            
+            <div class="pt-2 border-t border-white/5 space-y-2">
+                <span class="text-[10px] font-bold text-brandTextMuted uppercase tracking-wider">// Curation</span>
+                <a href="curation_music.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                    <i data-lucide="music" class="w-3.5 h-3.5 text-brandPoint"></i> 음악 소개
+                </a>
+                <a href="curation_youtube.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                    <i data-lucide="youtube" class="w-3.5 h-3.5 text-brandPoint"></i> 유튜브 (영크크)
+                </a>
+                <a href="curation_insight.html" class="block pl-2 text-xs font-medium text-brandText hover:text-brandPoint flex items-center gap-2 py-1">
+                    <i data-lucide="lightbulb" class="w-3.5 h-3.5 text-brandPoint"></i> 취준 (인사이트)
+                </a>
+            </div>
+
+            <div class="pt-2 border-t border-white/5">
+                <a href="guestbook.html" class="block text-sm font-medium text-brandText hover:text-brandPoint pt-1">Guestbook (방명록)</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================================================================= -->
+    <!-- [홈 본문 영역 시작] -->
+    <!-- ================================================================= -->
+
+    <!-- 1. 히어로 섹션 (요청하신 이미지 문구 및 구성 완벽 적용) -->
+    <section class="min-h-[85vh] flex items-center justify-center pt-28 pb-16 relative overflow-hidden">
+        <!-- 배경 앰비언트 글로우 -->
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-brandPoint/10 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 text-center z-10 space-y-8">
+            <!-- 상단 태그/배지 -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brandCard border border-white/5 text-xs font-medium text-brandPoint shadow-inner">
+                In-ho's Personal Archives
+            </div>
+
+            <!-- 메인 타이틀 -->
+            <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight font-serif italic">
+                "퇴근길, 이불 속에서 꺼내보는<br class="hidden sm:inline">
+                이인호의 <span class="text-brandPoint font-sans not-italic font-black">취향 상자</span>"
+            </h1>
+
+            <!-- 설명 본문 (띄어쓰기 등 이미지 텍스트 100% 일치) -->
+            <p class="text-base sm:text-lg text-brandTextMuted max-w-2xl mx-auto leading-relaxed font-normal">
+                안녕하세요인호입니다잘부탁드립니다. 바쁜 일상과 치열한 취준의 굴레 속에서 잠시 숨을 고를 수 있는 아늑한 공간입니다. 제가 깊이 빠졌던 힙한 음악, 시간 가는 줄 모르던 영상, 그리고 무기가 되어준 인사이트를 정성껏 큐레이션하여 전합니다. 잘 부탁드립니다!
+            </p>
+
+            <!-- 버튼 영역 -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="quiz.html" class="w-full sm:w-auto px-8 py-4 bg-brandPoint hover:bg-brandPointHover text-white font-bold rounded-xl transition duration-300 shadow-xl shadow-brandPoint/20 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="gamepad-2" class="w-4 h-4"></i>
+                    <span>취향 싱크로율 테스트</span>
+                </a>
+                <a href="curation_music.html" class="w-full sm:w-auto px-8 py-4 bg-brandCard hover:bg-white/5 border border-white/10 text-white font-bold rounded-xl transition duration-300 flex items-center justify-center gap-2 text-sm">
+                    <i data-lucide="layout-grid" class="w-4 h-4 text-brandPoint"></i>
+                    <span>큐레이션 둘러보기</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    
+            <!-- 하단 안내 배너 -->
+            <div class="mt-16 bg-gradient-to-r from-brandCard via-neutral-900 to-brandCard border border-white/10 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div class="space-y-1 text-center sm:text-left">
+                    <h4 class="text-lg font-bold text-white">다음 단계: 나만의 개발 성향을 확인해볼 시간입니다</h4>
+                    <p class="text-xs text-brandTextMuted">인호님의 큐레이션 가치관과 나의 취향 싱크로율을 간단한 미니 테스트로 알아보세요.</p>
+                </div>
+                <a href="quiz.html" class="px-6 py-3 bg-white text-black hover:bg-brandPoint hover:text-white font-bold text-xs rounded-xl transition duration-300 shrink-0 flex items-center gap-2 shadow-md">
+                    <span>Taste Matcher 이동</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. 푸터 -->
+    <footer class="py-12 bg-brandBg border-t border-white/5 text-center text-brandTextMuted text-xs space-y-4">
+        <div class="flex justify-center space-x-6 text-sm mb-4">
+            <a href="#" class="hover:text-white transition"><i data-lucide="github" class="w-5 h-5"></i></a>
+            <a href="#" class="hover:text-white transition"><i data-lucide="mail" class="w-5 h-5"></i></a>
+            <a href="#" class="hover:text-white transition"><i data-lucide="share-2" class="w-5 h-5"></i></a>
+        </div>
+        <p>© 2026 INHO. All rights reserved.</p>
+        <p class="text-[10px] text-neutral-600">Built with passion for intensive learning & systematic growth.</p>
+    </footer>
+
+    <!-- ================================================================= -->
+    <!-- [확정된 네비게이션 바 동작 스크립트 (절대 수정 없음)] -->
+    <!-- ================================================================= -->
+    <script>
+        // 아이콘 초기화
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+
+        // 모바일 햄버거 메뉴 토글
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = document.getElementById('hamburgerIcon');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.setAttribute('data-lucide', 'x');
+            } else {
+                menu.classList.add('hidden');
+                icon.setAttribute('data-lucide', 'menu');
+            }
+            lucide.createIcons();
+        }
+
+        // 시네마 모드 토글 (기존 로직 유지)
+        function toggleCinemaMode() {
+            const body = document.body;
+            const icon = document.getElementById('cinemaIcon');
+            body.classList.toggle('cinema-mode');
+            
+            if(body.classList.contains('cinema-mode')) {
+                icon.setAttribute('data-lucide', 'moon');
+                icon.parentElement.classList.add('bg-brandPoint/15', 'text-brandPoint');
+            } else {
+                icon.setAttribute('data-lucide', 'lightbulb');
+                icon.parentElement.classList.remove('bg-brandPoint/15', 'text-brandPoint');
+            }
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>
