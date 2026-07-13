@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="이인호의 음악, 영상, 커리어 인사이트를 담은 개인 취향 큐레이션 사이트">
+  <title>INHO. | 취향 큐레이션</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/common.js" defer></script>
+</head>
+<body data-page="home">
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="logo" href="index.html" aria-label="홈으로 이동">INHO<span class="logo-dot">.</span></a>
+      <nav class="desktop-nav" aria-label="주요 메뉴">
+        <a class="nav-link" data-nav="home" href="index.html">Intro</a>
+        <a class="nav-link" data-nav="quiz" href="quiz.html">Taste Matcher</a>
+        <a class="nav-link" data-nav="curation" href="curation.html">Curation</a>
+        <a class="nav-link" data-nav="guestbook" href="guestbook.html">Guestbook</a>
+      </nav>
+      <div class="header-actions">
+        <span class="level-chip" data-level>Lv.1 새로운 방문자</span>
+        <span class="point-chip">⭐ <strong data-points>0</strong><span class="point-label">P</span></span>
+        <button class="icon-btn" type="button" data-cinema-toggle aria-label="시네마 모드 전환"><span data-cinema-icon>☀</span></button>
+        <button class="mobile-menu-btn" type="button" data-mobile-menu-button aria-label="모바일 메뉴 열기" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+  <nav class="mobile-nav" data-mobile-nav aria-label="모바일 메뉴">
+    <a class="nav-link" data-nav="home" href="index.html">Intro</a>
+    <a class="nav-link" data-nav="quiz" href="quiz.html">Taste Matcher</a>
+    <a class="nav-link" data-nav="curation" href="curation.html">Curation</a>
+    <a class="nav-link" data-nav="guestbook" href="guestbook.html">Guestbook</a>
+  </nav>
+
+  <main id="main-content" class="page-main">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">In-ho's Personal Archives</span>
+          <h1 class="hero-title">퇴근길, 이불 속에서 꺼내보는 <span class="point-text">취향 상자</span></h1>
+          <p class="hero-copy">바쁜 일상과 취업 준비 사이에서 잠시 숨을 고르는 공간입니다. 깊이 빠졌던 음악, 시간 가는 줄 모르던 영상, 실제로 도움이 된 커리어 인사이트를 정성껏 모았습니다.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="quiz.html">🎮 취향 매칭 시작</a>
+            <a class="btn btn-secondary" href="curation.html">▦ 큐레이션 둘러보기</a>
+          </div>
+        </div>
+
+        <aside class="dashboard-card reveal" aria-label="취향 진행 현황">
+          <div class="dashboard-top">
+            <div>
+              <p class="dashboard-label">MY TASTE LEVEL</p>
+              <h2 class="dashboard-level" data-level>Lv.1 새로운 방문자</h2>
+            </div>
+            <div class="score-ring" data-score-ring style="--progress:0%"><strong data-completion>0%</strong></div>
+          </div>
+          <div class="progress-meta"><span>취향 상자 완성도</span><span data-completion>0%</span></div>
+          <div class="progress-track"><div class="progress-fill" data-completion-bar></div></div>
+          <div class="mini-stats">
+            <div class="mini-stat"><strong data-points>0</strong><span>보유 포인트</span></div>
+            <div class="mini-stat"><strong data-badge-count>0</strong><span>획득 뱃지</span></div>
+            <div class="mini-stat"><strong data-saved-count>0</strong><span>저장 콘텐츠</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-kicker">// HYBRID EXPERIENCE</span>
+          <h2 class="section-title">페이지는 나누고, 경험은 끊기지 않게</h2>
+          <p class="section-copy">상단 메뉴는 네 개의 HTML 페이지로 이동하는 MPA 구조입니다. 각 페이지 안의 질문, 필터, 방명록은 새로고침 없이 화면만 바뀌는 SPA 방식으로 동작합니다.</p>
+        </div>
+        <div class="page-link-grid">
+          <a class="page-link-card reveal" href="quiz.html"><div class="card-number">01 · TEST</div><h3>Taste Matcher</h3><p>한 화면 안에서 질문 1부터 결과까지 자연스럽게 전환합니다.</p><span class="card-link">테스트 시작 →</span></a>
+          <a class="page-link-card reveal" href="curation.html"><div class="card-number">02 · FILTER</div><h3>Curation</h3><p>전체·음악·유튜브·취준 탭을 눌러 원하는 콘텐츠만 봅니다.</p><span class="card-link">콘텐츠 보기 →</span></a>
+          <a class="page-link-card reveal" href="guestbook.html"><div class="card-number">03 · SHARE</div><h3>Guestbook</h3><p>추천작을 등록하면 같은 화면의 목록에 즉시 추가됩니다.</p><span class="card-link">메시지 남기기 →</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-kicker">// TASTE JOURNEY</span>
+          <h2 class="section-title">발견 → 감상 → 공유</h2>
+          <p class="section-copy">한 번의 방문으로 끝나지 않고, 취향을 찾고 저장하고 다른 방문자와 나누는 흐름으로 설계했습니다.</p>
+        </div>
+        <div class="grid-3">
+          <article class="step-card reveal"><div class="step-line"><span class="card-number">STEP 01</span></div><h3>발견</h3><p>세 가지 질문에 답하며 인호와 나의 취향 싱크로율을 확인합니다.</p></article>
+          <article class="step-card reveal"><div class="step-line"><span class="card-number">STEP 02</span></div><h3>감상</h3><p>음악과 영상, 취업 인사이트를 카테고리별로 골라 저장합니다.</p></article>
+          <article class="step-card reveal"><div class="step-line"><span class="card-number">STEP 03</span></div><h3>공유</h3><p>혼자 알기 아까운 추천작과 감상 메시지를 방명록에 남깁니다.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-dark">
+      <div class="container">
+        <div class="section-header reveal"><span class="section-kicker">// BADGES</span><h2 class="section-title">활동할수록 열리는 뱃지</h2><p class="section-copy">페이지 방문, 퀴즈 완료, 콘텐츠 저장, 방명록 작성으로 포인트와 뱃지를 획득할 수 있습니다.</p></div>
+        <div class="badge-grid" data-badge-grid></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-row"><span>© 2026 이인호. Personal Taste Archive.</span><span>HTML · CSS · Vanilla JavaScript · MPA + SPA Interaction</span></div></footer>
+  <div class="toast" data-toast role="status" aria-live="polite"><strong></strong><span></span></div>
+</body>
+</html>

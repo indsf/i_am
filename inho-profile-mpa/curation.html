@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="음악, 유튜브, 취업 인사이트를 한 페이지에서 필터링하는 이인호의 큐레이션">
+  <title>Curation | INHO.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/common.js" defer></script>
+  <script src="assets/curation.js" defer></script>
+</head>
+<body data-page="curation">
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="logo" href="index.html" aria-label="홈으로 이동">INHO<span class="logo-dot">.</span></a>
+      <nav class="desktop-nav" aria-label="주요 메뉴">
+        <a class="nav-link" data-nav="home" href="index.html">Intro</a>
+        <a class="nav-link" data-nav="quiz" href="quiz.html">Taste Matcher</a>
+        <a class="nav-link" data-nav="curation" href="curation.html">Curation</a>
+        <a class="nav-link" data-nav="guestbook" href="guestbook.html">Guestbook</a>
+      </nav>
+      <div class="header-actions">
+        <span class="level-chip" data-level>Lv.1 새로운 방문자</span>
+        <span class="point-chip">⭐ <strong data-points>0</strong><span class="point-label">P</span></span>
+        <button class="icon-btn" type="button" data-cinema-toggle aria-label="시네마 모드 전환"><span data-cinema-icon>☀</span></button>
+        <button class="mobile-menu-btn" type="button" data-mobile-menu-button aria-label="모바일 메뉴 열기" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+  <nav class="mobile-nav" data-mobile-nav aria-label="모바일 메뉴">
+    <a class="nav-link" data-nav="home" href="index.html">Intro</a>
+    <a class="nav-link" data-nav="quiz" href="quiz.html">Taste Matcher</a>
+    <a class="nav-link" data-nav="curation" href="curation.html">Curation</a>
+    <a class="nav-link" data-nav="guestbook" href="guestbook.html">Guestbook</a>
+  </nav>
+
+  <main id="main-content" class="page-main">
+    <section class="page-hero">
+      <div class="container reveal">
+        <span class="section-kicker">// CURATION HUB</span>
+        <h1 class="page-title">이인호의 최애 <span class="point-text">큐레이션</span></h1>
+        <p class="page-copy">다른 HTML 파일로 이동하지 않고, 탭을 누르면 같은 페이지 안에서 카드만 바뀝니다. 마음에 드는 콘텐츠는 저장해 포인트를 얻을 수 있습니다.</p>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="curation-toolbar reveal">
+        <div><span class="section-kicker">// SELECT CATEGORY</span></div>
+        <div class="filter-tabs" role="tablist" aria-label="큐레이션 필터">
+          <button class="filter-btn active" type="button" data-filter="all" role="tab" aria-selected="true">전체보기</button>
+          <button class="filter-btn" type="button" data-filter="music" role="tab" aria-selected="false">음악</button>
+          <button class="filter-btn" type="button" data-filter="youtube" role="tab" aria-selected="false">유튜브</button>
+          <button class="filter-btn" type="button" data-filter="insight" role="tab" aria-selected="false">취준 인사이트</button>
+        </div>
+      </div>
+
+      <div class="curation-grid">
+        <article class="content-card reveal" data-curation-card data-category="music" data-title="낯설 - to." data-description="새벽 두 시, 텅 빈 방에서 불을 끄고 감상하기 좋은 밤비트 곡입니다." data-youtube-id="MuUsLij-S5c">
+          <div class="content-visual" style="--visual:linear-gradient(145deg,#2b1b1b,#111)"><span class="visual-label">// 음악의 보법이 다르다</span></div>
+          <div class="content-body"><h3>to.</h3><div class="content-meta">낯설</div><p class="content-description">새벽 두 시, 텅 빈 방에서 불을 끄고 감상하기 좋은 밤비트 곡입니다.</p><div class="content-actions"><span class="tag">새벽 감성 야간비행</span><div class="action-group"><button class="round-action" type="button" data-save-content="music-to" aria-label="콘텐츠 저장">＋</button><button class="round-action" type="button" data-open-content aria-label="영상 감상">▶</button></div></div></div>
+        </article>
+
+        <article class="content-card reveal" data-curation-card data-category="music" data-title="양홍원 - rose" data-description="서정적인 비트와 날것의 가사가 강한 여운을 남기는 힙합 트랙입니다." data-youtube-id="s6NS0wL6cto">
+          <div class="content-visual" style="--visual:linear-gradient(145deg,#262126,#101010)"><span class="visual-label">// 음악의 보법이 다르다</span></div>
+          <div class="content-body"><h3>rose</h3><div class="content-meta">양홍원</div><p class="content-description">서정적인 비트와 날것의 가사가 강한 여운을 남기는 힙합 트랙입니다.</p><div class="content-actions"><span class="tag">서정적 울림 힙합</span><div class="action-group"><button class="round-action" type="button" data-save-content="music-rose" aria-label="콘텐츠 저장">＋</button><button class="round-action" type="button" data-open-content aria-label="영상 감상">▶</button></div></div></div>
+        </article>
+
+        <article class="content-card reveal" data-curation-card data-category="music" data-title="CAMO - Wifey" data-description="드라이브나 운동 전에 듣기 좋은 세련된 신스 사운드의 트랙입니다." data-youtube-id="TYGu-DnX8kg">
+          <div class="content-visual" style="--visual:linear-gradient(145deg,#182127,#0d0f11)"><span class="visual-label">// 음악의 보법이 다르다</span></div>
+          <div class="content-body"><h3>Wifey</h3><div class="content-meta">CAMO</div><p class="content-description">드라이브나 운동 전에 듣기 좋은 세련된 신스 사운드의 트랙입니다.</p><div class="content-actions"><span class="tag">트렌디 시티 무드</span><div class="action-group"><button class="round-action" type="button" data-save-content="music-wifey" aria-label="콘텐츠 저장">＋</button><button class="round-action" type="button" data-open-content aria-label="영상 감상">▶</button></div></div></div>
+        </article>
+
+        <article class="content-card reveal" data-curation-card data-category="youtube" data-title="안녕하세요 원이입니다 잘 부탁드립니다" data-description="날것의 신선함과 빠른 자막 센스, 캐릭터의 케미가 강점인 B급 감성 예능 채널입니다.">
+          <div class="content-visual" style="--visual:linear-gradient(145deg,#291b24,#101010)"><span class="visual-label">// 영크크 예능 큐레이션</span></div>
+          <div class="content-body"><h3>안원잘부</h3><div class="content-meta">시간순삭지수 100%</div><p class="content-description">날것의 신선함과 빠른 자막 센스, 캐릭터의 케미가 강점인 B급 감성 예능 채널입니다.</p><div class="content-actions"><span class="tag">B급 감성 · 캐릭터 케미</span><div class="action-group"><button class="round-action" type="button" data-save-content="youtube-woni" aria-label="콘텐츠 저장">＋</button><button class="round-action" type="button" data-open-content aria-label="상세 보기">↗</button></div></div></div>
+        </article>
+
+        <article class="content-card reveal" data-curation-card data-category="insight" data-title="생각등대" data-description="복잡한 고민을 한 걸음 떨어져 바라보게 만드는 오디오북형 힐링 콘텐츠입니다.">
+          <div class="content-visual" style="--visual:linear-gradient(145deg,#2a2518,#111)"><span class="visual-label">// 생각의 지표</span></div>
+          <div class="content-body"><h3>생각등대</h3><div class="content-meta">마음이 복잡할 때 듣는 처방전</div><p class="content-description">복잡한 고민을 한 걸음 떨어져 바라보게 만드는 오디오북형 힐링 콘텐츠입니다.</p><div class="content-actions"><span class="tag">힐링 · 생각 정리</span><div class="action-group"><button class="round-action" type="button" data-save-content="insight-lighthouse" aria-label="콘텐츠 저장">＋</button><button class="round-action" type="button" data-open-content aria-label="상세 보기">↗</button></div></div></div>
+        </article>
+
+        <article class="content-card reveal" data-curation-card data-category="insight" data-title="면접왕 이형" data-description="기업과 인사담당자의 관점에서 자기소개서와 면접 경험을 구조화하는 방법을 알려주는 실전 채널입니다.">
+          <div class="content-visual" style="--visual:linear-gradient(145deg,#172332,#0d0f12)"><span class="visual-label">// 취업 실전 가이드</span></div>
+          <div class="content-body"><h3>면접왕 이형</h3><div class="content-meta">필살기 경험 구조화</div><p class="content-description">기업과 인사담당자의 관점에서 자기소개서와 면접 경험을 구조화하는 방법을 알려줍니다.</p><div class="content-actions"><span class="tag">자소서 · 면접 · 커리어</span><div class="action-group"><button class="round-action" type="button" data-save-content="insight-interview" aria-label="콘텐츠 저장">＋</button><button class="round-action" type="button" data-open-content aria-label="상세 보기">↗</button></div></div></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-row"><span>© 2026 이인호. Personal Taste Archive.</span><span>현재 페이지 · Curation</span></div></footer>
+  <div class="modal" data-curation-modal role="dialog" aria-modal="true" aria-labelledby="curation-modal-title">
+    <div class="modal-panel">
+      <div class="modal-media" data-modal-media></div>
+      <div class="modal-content"><div class="modal-head"><h2 id="curation-modal-title" data-modal-title></h2><button class="modal-close" type="button" data-modal-close aria-label="닫기">✕</button></div><p class="modal-copy" data-modal-copy></p></div>
+    </div>
+  </div>
+  <div class="toast" data-toast role="status" aria-live="polite"><strong></strong><span></span></div>
+</body>
+</html>

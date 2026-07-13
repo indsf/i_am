@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="추천 콘텐츠와 메시지를 남기는 이인호의 취향 방명록">
+  <title>Guestbook | INHO.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/common.js" defer></script>
+  <script src="assets/guestbook.js" defer></script>
+</head>
+<body data-page="guestbook">
+  <a class="skip-link" href="#main-content">본문 바로가기</a>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="logo" href="index.html" aria-label="홈으로 이동">INHO<span class="logo-dot">.</span></a>
+      <nav class="desktop-nav" aria-label="주요 메뉴">
+        <a class="nav-link" data-nav="home" href="index.html">Intro</a>
+        <a class="nav-link" data-nav="quiz" href="quiz.html">Taste Matcher</a>
+        <a class="nav-link" data-nav="curation" href="curation.html">Curation</a>
+        <a class="nav-link" data-nav="guestbook" href="guestbook.html">Guestbook</a>
+      </nav>
+      <div class="header-actions">
+        <span class="level-chip" data-level>Lv.1 새로운 방문자</span>
+        <span class="point-chip">⭐ <strong data-points>0</strong><span class="point-label">P</span></span>
+        <button class="icon-btn" type="button" data-cinema-toggle aria-label="시네마 모드 전환"><span data-cinema-icon>☀</span></button>
+        <button class="mobile-menu-btn" type="button" data-mobile-menu-button aria-label="모바일 메뉴 열기" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+  <nav class="mobile-nav" data-mobile-nav aria-label="모바일 메뉴">
+    <a class="nav-link" data-nav="home" href="index.html">Intro</a>
+    <a class="nav-link" data-nav="quiz" href="quiz.html">Taste Matcher</a>
+    <a class="nav-link" data-nav="curation" href="curation.html">Curation</a>
+    <a class="nav-link" data-nav="guestbook" href="guestbook.html">Guestbook</a>
+  </nav>
+
+  <main id="main-content" class="page-main">
+    <section class="page-hero">
+      <div class="container reveal">
+        <span class="section-kicker">// GUESTBOOK</span>
+        <h1 class="page-title">당신의 <span class="point-text">인생작</span>은 무엇인가요?</h1>
+        <p class="page-copy">폼을 제출하면 페이지 이동 없이 목록 최상단에 바로 추가되며, 브라우저를 닫았다가 다시 열어도 기록이 유지됩니다.</p>
+      </div>
+    </section>
+
+    <section class="container guestbook-layout">
+      <div class="guestbook-card reveal">
+        <span class="section-kicker">// WRITE MESSAGE</span>
+        <h2 class="section-title" style="font-size:1.7rem;margin-top:10px">취향 한 조각 남기기</h2>
+        <form data-guestbook-form class="form-grid" novalidate>
+          <div class="form-field"><label for="guest-name">이름 / 닉네임 *</label><input id="guest-name" name="name" type="text" maxlength="20" autocomplete="nickname" placeholder="방문자 이름" required></div>
+          <div class="form-field"><label for="guest-recommend">추천 음악 / 콘텐츠</label><input id="guest-recommend" name="recommend" type="text" maxlength="50" placeholder="추천작 이름"></div>
+          <div class="form-field full"><label for="guest-message">메시지 *</label><textarea id="guest-message" name="message" rows="5" maxlength="300" placeholder="감상이나 추천 이유를 적어주세요." required></textarea></div>
+          <div class="form-field full"><button class="btn btn-primary" type="submit">방명록 등록하기</button></div>
+        </form>
+        <p class="form-help">입력 내용은 서버가 아닌 현재 브라우저의 localStorage에 저장됩니다.</p>
+      </div>
+
+      <div class="guestbook-card reveal">
+        <div class="list-title"><h2>실시간 취향 소통</h2><span class="count-badge"><span data-guestbook-count>0</span>개</span></div>
+        <div class="guestbook-list" data-guestbook-list></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-row"><span>© 2026 이인호. Personal Taste Archive.</span><span>현재 페이지 · Guestbook</span></div></footer>
+  <div class="toast" data-toast role="status" aria-live="polite"><strong></strong><span></span></div>
+</body>
+</html>
