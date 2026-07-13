@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이인호 | 취향 큐레이션 공간</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nanum+Myeongjo:wght@400;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBg: '#121212',
+                        brandBgCinema: '#080808',
+                        brandCard: '#1E1E1E',
+                        brandCardCinema: '#141414',
+                        brandPoint: '#FF4D4D',
+                        brandPointHover: '#E03D3D',
+                        brandText: '#E0E0E0',
+                        brandTextMuted: '#999999',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        serif: ['Nanum Myeongjo', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #E0E0E0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+        /* Cinema Mode Active Styles */
+        body.cinema-mode {
+            background-color: #080808;
+        }
+        body.cinema-mode .bg-brandCard {
+            background-color: #141414;
+            border-color: rgba(255, 77, 77, 0.05);
+        }
+        body.cinema-mode .cinema-dim {
+            opacity: 0.15;
+        }
+        body.cinema-mode .cinema-glowing {
+            text-shadow: 0 0 12px rgba(255, 77, 77, 0.6);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2E2E2E;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF4D4D;
+        }
+        
+        /* Fade in animations */
+        .fade-in-ready {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Music Disc Animation */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .spin-animation {
+            animation: spin-slow 15s linear infinite;
+        }
+        .paused-spin {
+            animation-play-state: paused;
+        }
+
+        /* Glassmorphism background for active states */
+        .glass-card {
+            background: rgba(30, 30, 30, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 77, 77, 0.1);
+        }
+
+        /* Wave visualizer animation */
+        @keyframes bounce-wave {
+            0%, 100% { height: 4px; }
+            50% { height: 24px; }
+        }
+        .wave-bar {
+            width: 3px;
+            background-color: #FF4D4D;
+            border-radius: 9999px;
+            animation: bounce-wave 1.2s ease-in-out infinite;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.15s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.45s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.1s; }
+    </style>
+</head>
+<body class="font-sans antialiased">
+
+    <!-- Header Navigation -->
+    <header class="fixed top-0 left-0 w-full z-40 bg-brandBg/90 backdrop-blur-md border-b border-white/5 transition-all duration-500">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold tracking-wider text-white hover:text-brandPoint transition">
+                INHO <span class="text-brandPoint">.</span>
+            </a>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#intro" class="text-brandText hover:text-brandPoint transition">Intro</a>
+                <a href="#quiz" class="text-brandText hover:text-brandPoint transition">Taste Matcher</a>
+                <a href="#curation" class="text-brandText hover:text-brandPoint transition">Curation</a>
+                <a href="#guestbook" class="text-brandText hover:text-brandPoint transition">Guestbook</a>
+            </nav>
+            
+            <div class="flex items-center gap-4">
+                <!-- Cinema Mode Toggle Switch -->
+                <button onclick="toggleCinemaMode()" class="p-2 rounded-full hover:bg-white/5 border border-white/10 text-brandTextMuted hover:text-brandPoint transition duration-300" title="시네마 모드 켜기/끄기">
+                    <i id="cinemaIcon" data-lucide="lightbulb" class="w-5 h-5"></i>
+                </button>
+                <button onclick="scrollToSection('quiz')" class="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-white bg-brandPoint rounded-full hover:bg-brandPointHover transition duration-300 shadow-lg shadow-brandPoint/20">
+                    취향 매칭하기
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero / Intro Section -->
+    <section id="intro" class="min-h-screen flex items-center justify-center pt-24 pb-12 relative overflow-hidden">
+        <!-- Background Ambient Light -->
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-brandPoint/10 rounded-full blur-3xl pointer-events-none cinema-dim transition-opacity duration-700"></div>
+        <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-brandPoint/5 rounded-full blur-3xl pointer-events-none cinema-dim transition-opacity duration-700"></div>
+        
+        <div class="max-w-4xl mx-auto px-6 text-center z-10">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brandCard border border-white/10 text-xs font-medium text-brandPoint mb-8 fade-in-ready" id="hero-badge">
+                <span class="w-2 h-2 rounded-full bg-brandPoint animate-ping"></span>
+                In-ho's Personal Archives
+            </div>
+
+            <!-- Primary Catchphrase -->
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight font-serif italic fade-in-ready cinema-glowing transition-all duration-500" id="hero-title" style="transition-delay: 100ms;">
+                "퇴근길, 이불 속에서 꺼내보는 <br class="hidden sm:inline">
+                이인호의 <span class="text-brandPoint font-sans not-italic">취향 상자</span>"
+            </h1>
+
+            <p class="text-base sm:text-lg text-brandTextMuted max-w-2xl mx-auto mb-10 leading-relaxed fade-in-ready" id="hero-desc" style="transition-delay: 200ms;">
+                안녕하세요인호입니다잘부탁드립니다. 바쁜 일상과 치열한 취준의 굴레 속에서 잠시 숨을 고를 수 있는 아늑한 공간입니다. 제가 깊이 빠졌던 힙한 음악, 시간 가는 줄 모르던 영상, 그리고 무기가 되어준 인사이트를 정성껏 큐레이션하여 전합니다. 잘 부탁드립니다!
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in-ready" id="hero-btns" style="transition-delay: 300ms;">
+                <button onclick="scrollToSection('quiz')" class="w-full sm:w-auto px-8 py-4 bg-brandPoint hover:bg-brandPointHover text-white rounded-xl font-medium transition duration-300 shadow-xl shadow-brandPoint/20 flex items-center justify-center gap-2">
+                    <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+                    취향 싱크로율 테스트
+                </button>
+                <button onclick="scrollToSection('curation')" class="w-full sm:w-auto px-8 py-4 bg-brandCard hover:bg-white/5 border border-white/10 text-white rounded-xl font-medium transition duration-300 flex items-center justify-center gap-2">
+                    <i data-lucide="grid" class="w-5 h-5"></i>
+                    큐레이션 둘러보기
+                </button>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-brandTextMuted text-xs tracking-widest uppercase cursor-pointer" onclick="scrollToSection('quiz')">
+            <span>Scroll Down</span>
+            <i data-lucide="chevrons-down" class="w-4 h-4 animate-bounce"></i>
+        </div>
+    </section>
+
+    <!-- Taste Matcher Quiz Section -->
+    <section id="quiz" class="py-24 bg-black/20 border-y border-white/5 relative">
+        <div class="max-w-4xl mx-auto px-6">
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-12 fade-in-ready">
+                <span class="text-brandPoint text-sm font-bold tracking-widest uppercase block mb-3">// INTERACTIVE MINI TEST</span>
+                <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">인호와 나의 취향 싱크로율은?</h2>
+                <p class="text-brandTextMuted text-sm leading-relaxed">
+                    3가지 질문을 통해 이인호님의 큐레이션 가치관과 방문자님의 콘텐츠 취향이 얼마나 닮아 있는지 지금 바로 테스트해보세요!
+                </p>
+            </div>
+
+            <!-- Quiz Container Card -->
+            <div id="quizContainer" class="bg-brandCard rounded-3xl p-8 sm:p-12 border border-white/5 shadow-2xl relative overflow-hidden fade-in-ready">
+                
+                <!-- Progress Line -->
+                <div class="w-full h-1.5 bg-neutral-800 rounded-full mb-8 relative">
+                    <div id="quizProgress" class="h-full bg-brandPoint rounded-full transition-all duration-300" style="width: 33%;"></div>
+                </div>
+
+                <!-- Quiz Steps -->
+                <div id="quizStepContent" class="space-y-8">
+                    <!-- Dynamic Question Area -->
+                    <div>
+                        <span id="questionStep" class="text-xs text-brandPoint font-bold tracking-widest uppercase">Question 01 of 03</span>
+                        <h3 id="questionTitle" class="text-xl sm:text-2xl font-black text-white mt-2 leading-snug">나의 새벽 감성을 촉촉하게 적셔줄 최애 장르는?</h3>
+                    </div>
+
+                    <!-- Options -->
+                    <div id="quizOptions" class="grid grid-cols-1 gap-4">
+                        <!-- Dynamic Options will be loaded via JS -->
+                    </div>
+                </div>
+
+                <!-- Result Page -->
+                <div id="quizResult" class="hidden text-center space-y-8 py-6">
+                    <div class="relative inline-block">
+                        <div class="w-36 h-36 rounded-full border-4 border-dashed border-brandPoint flex items-center justify-center mx-auto animate-[spin-slow_30s_linear_infinite]"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span id="resultScore" class="text-4xl sm:text-5xl font-black text-white">85%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <h3 id="resultTitle" class="text-2xl font-black text-brandPoint">운명적인 음악의 동반자!</h3>
+                        <p id="resultDesc" class="text-brandTextMuted text-sm max-w-md mx-auto leading-relaxed">
+                            우와! 정말 놀라운 일치율이네요. 인호님이 선정한 낯설, 양홍원, CAMO의 숨겨진 밤 비트 큐레이션을 120% 사랑하실 분입니다.
+                        </p>
+                    </div>
+
+                    <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+                        <button onclick="restartQuiz()" class="w-full sm:w-auto px-6 py-3 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold rounded-xl transition uppercase tracking-wider">
+                            테스트 다시하기
+                        </button>
+                        <button onclick="scrollToSection('curation')" class="w-full sm:w-auto px-6 py-3 bg-brandPoint hover:bg-brandPointHover text-white text-xs font-bold rounded-xl transition uppercase tracking-wider shadow-md shadow-brandPoint/10">
+                            맞춤 큐레이션 감상하기
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Curation Hub -->
+    <section id="curation" class="py-24 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 fade-in-ready">
+                <div>
+                    <span class="text-brandPoint text-sm font-bold tracking-widest uppercase block mb-3">// 02. CURATION HUB</span>
+                    <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight">이인호의 최애 큐레이션</h2>
+                </div>
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap gap-2 mt-6 md:mt-0 bg-neutral-900 p-1.5 rounded-2xl border border-white/5">
+                    <button onclick="filterCuration('all')" class="curation-tab-btn active px-4 py-2 text-xs font-bold rounded-xl bg-brandPoint text-white transition-all duration-300">전체보기</button>
+                    <button onclick="filterCuration('music')" class="curation-tab-btn px-4 py-2 text-xs font-bold rounded-xl text-brandTextMuted hover:text-white transition-all duration-300">음악 (보법)</button>
+                    <button onclick="filterCuration('youtube')" class="curation-tab-btn px-4 py-2 text-xs font-bold rounded-xl text-brandTextMuted hover:text-white transition-all duration-300">유튜브 (영크크)</button>
+                    <button onclick="filterCuration('insight')" class="curation-tab-btn px-4 py-2 text-xs font-bold rounded-xl text-brandTextMuted hover:text-white transition-all duration-300">취준 (인사이트)</button>
+                </div>
+            </div>
+
+            <!-- API Connection Info Badge -->
+            <div class="mb-6 flex items-center gap-2 text-xs text-brandPoint font-semibold bg-brandPoint/10 border border-brandPoint/20 px-4 py-2 rounded-xl max-w-max fade-in-ready">
+                <i data-lucide="radio" class="w-4 h-4 animate-pulse"></i>
+                <span>실제 유튜브 플레이어 API 연동 완료 (재생 버튼 클릭 시 음악이 재생됩니다)</span>
+            </div>
+
+            <!-- Curation Cards Grid -->
+            <div id="curationGrid" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Music Card 1 (낯설 - to.) -->
+                <div class="curation-card bg-brandCard rounded-3xl p-6 border border-white/5 hover:border-brandPoint/30 transition-all duration-300 group cursor-pointer fade-in-ready" data-category="music" style="transition-delay: 100ms;">
+                    <div class="relative overflow-hidden rounded-2xl mb-6 aspect-square bg-neutral-800">
+                        <div class="absolute inset-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <div class="w-48 h-48 rounded-full bg-neutral-950 flex items-center justify-center relative shadow-2xl border border-white/10 spin-animation">
+                                <div class="w-20 h-20 rounded-full bg-brandPoint/20 border border-brandPoint/40 flex items-center justify-center">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-900 border border-white/10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                            <span class="text-brandPoint text-[10px] font-extrabold uppercase tracking-widest mb-1">// 음악의 보법이 다르다</span>
+                            <h3 class="text-2xl font-black text-white group-hover:text-brandPoint transition">to.</h3>
+                            <p class="text-brandTextMuted text-xs">낯설</p>
+                        </div>
+                    </div>
+                    <p class="text-brandTextMuted text-sm mb-6 line-clamp-2">새벽 두 시, 텅 빈 방 안에서 불을 끄고 감상하기 좋은 밤비트 곡입니다.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-brandTextMuted px-2.5 py-1 rounded-full bg-white/5 border border-white/10">새벽 감성 야간비행</span>
+                        <button onclick="playSong('낯설', 'to.', 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=100&auto=format&fit=crop&q=60', 'MuUsLij-S5c')" class="w-10 h-10 rounded-full bg-brandPoint hover:bg-brandPointHover text-white flex items-center justify-center transition shadow-lg shadow-brandPoint/25" title="재생하기">
+                            <i data-lucide="play" class="w-5 h-5 ml-0.5 fill-current"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Music Card 2 (양홍원 - rose) -->
+                <div class="curation-card bg-brandCard rounded-3xl p-6 border border-white/5 hover:border-brandPoint/30 transition-all duration-300 group cursor-pointer fade-in-ready" data-category="music" style="transition-delay: 200ms;">
+                    <div class="relative overflow-hidden rounded-2xl mb-6 aspect-square bg-neutral-800">
+                        <div class="absolute inset-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <div class="w-48 h-48 rounded-full bg-neutral-950 flex items-center justify-center relative shadow-2xl border border-white/10 spin-animation paused-spin">
+                                <div class="w-20 h-20 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-900 border border-white/10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                            <span class="text-brandPoint text-[10px] font-extrabold uppercase tracking-widest mb-1">// 음악의 보법이 다르다</span>
+                            <h3 class="text-2xl font-black text-white group-hover:text-brandPoint transition">rose</h3>
+                            <p class="text-brandTextMuted text-xs">양홍원</p>
+                        </div>
+                    </div>
+                    <p class="text-brandTextMuted text-sm mb-6 line-clamp-2">서정적이면서도 퇴폐적인 비트 위 날 것의 가사가 가슴을 파고듭니다.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-brandTextMuted px-2.5 py-1 rounded-full bg-white/5 border border-white/10">서정적 울림 힙합</span>
+                        <button onclick="playSong('양홍원', 'rose', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&auto=format&fit=crop&q=60', 's6NS0wL6cto')" class="w-10 h-10 rounded-full bg-brandPoint hover:bg-brandPointHover text-white flex items-center justify-center transition shadow-lg shadow-brandPoint/25" title="재생하기">
+                            <i data-lucide="play" class="w-5 h-5 ml-0.5 fill-current"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Music Card 3 (CAMO - wifey) -->
+                <div class="curation-card bg-brandCard rounded-3xl p-6 border border-white/5 hover:border-brandPoint/30 transition-all duration-300 group cursor-pointer fade-in-ready" data-category="music" style="transition-delay: 300ms;">
+                    <div class="relative overflow-hidden rounded-2xl mb-6 aspect-square bg-neutral-800">
+                        <div class="absolute inset-0 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                            <div class="w-48 h-48 rounded-full bg-neutral-950 flex items-center justify-center relative shadow-2xl border border-white/10 spin-animation paused-spin">
+                                <div class="w-20 h-20 rounded-full bg-neutral-800 border border-neutral-700 flex items-center justify-center">
+                                    <div class="w-6 h-6 rounded-full bg-neutral-900 border border-white/10"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
+                            <span class="text-brandPoint text-[10px] font-extrabold uppercase tracking-widest mb-1">// 음악의 보법이 다르다</span>
+                            <h3 class="text-2xl font-black text-white group-hover:text-brandPoint transition">wifey</h3>
+                            <p class="text-brandTextMuted text-xs">CAMO</p>
+                        </div>
+                    </div>
+                    <p class="text-brandTextMuted text-sm mb-6 line-clamp-2">드라이브나 운동 전, 세련되고 힙한 신스 사운드가 세련된 기분을 선사합니다.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-brandTextMuted px-2.5 py-1 rounded-full bg-white/5 border border-white/10">트렌디 시티 팝</span>
+                        <button onclick="playSong('CAMO', 'wifey', 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&auto=format&fit=crop&q=60', 'TYGu-DnX8kg')" class="w-10 h-10 rounded-full bg-brandPoint hover:bg-brandPointHover text-white flex items-center justify-center transition shadow-lg shadow-brandPoint/25" title="재생하기">
+                            <i data-lucide="play" class="w-5 h-5 ml-0.5 fill-current"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- YouTube Feature (영크크) -->
+                <div class="curation-card col-span-1 md:col-span-3 bg-brandCard rounded-3xl border border-white/5 p-8 sm:p-12 flex flex-col lg:flex-row gap-12 items-center fade-in-ready" data-category="youtube">
+                    <div class="w-full lg:w-1/2">
+                        <div class="relative rounded-2xl overflow-hidden aspect-video bg-neutral-900 border border-white/10 group shadow-2xl">
+                            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" style="background-image: url('https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=60');"></div>
+                            <div class="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                <a href="https://www.youtube.com/@helloiamwoninicetomeetyou" target="_blank" class="w-16 h-16 rounded-full bg-brandPoint text-white flex items-center justify-center hover:scale-110 active:scale-95 transition cursor-pointer shadow-lg shadow-brandPoint/30" title="공식 유튜브 바로가기">
+                                    <i data-lucide="play" class="w-8 h-8 fill-current ml-1"></i>
+                                </a>
+                            </div>
+                            <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white/80 bg-black/40 backdrop-blur-md py-2 px-4 rounded-lg">
+                                <span>안녕하세요원이입니다잘부탁드립니다</span>
+                                <span class="text-brandPoint font-bold">인호 최애 채널 🔥</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/2 space-y-6">
+                        <div class="inline-block px-3 py-1 bg-brandPoint/10 rounded-md border border-brandPoint/30 text-xs font-bold text-brandPoint tracking-wider">
+                            영크크 예능 큐레이션
+                        </div>
+                        <h3 class="text-2xl sm:text-3xl font-black text-white leading-snug">
+                            안녕하세요 원이입니다 잘 부탁드립니다
+                        </h3>
+                        <p class="text-brandTextMuted leading-relaxed">
+                            최근 유튜브 알고리즘을 지배하며 날 것의 신선함과 극강의 자막 센스로 엄청난 떡상을 기록 중인 채널입니다. 고정관념을 깨부수는 위트 넘치는 연출 방식과 캐릭터들의 미친 케미스트리가 끝없는 몰입감을 선사합니다.
+                        </p>
+                        <div class="pt-4 border-t border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div class="flex items-center gap-6">
+                                <div>
+                                    <p class="text-2xl font-bold text-white">100%</p>
+                                    <p class="text-xs text-brandTextMuted">시간순삭지수</p>
+                                </div>
+                                <div class="w-px h-8 bg-white/10"></div>
+                                <div>
+                                    <p class="text-2xl font-bold text-white">B급 감성</p>
+                                    <p class="text-xs text-brandTextMuted">기획 키워드</p>
+                                </div>
+                            </div>
+                            <a href="https://www.youtube.com/@helloiamwoninicetomeetyou" target="_blank" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl flex items-center gap-2 transition duration-300 shadow-lg shadow-red-600/20">
+                                <i data-lucide="youtube" class="w-4 h-4"></i>
+                                공식 유튜브 채널 방문
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Insight 1: 생각등대 -->
+                <div class="curation-card bg-brandCard rounded-3xl p-8 border border-white/5 hover:border-brandPoint/20 transition-all duration-300 flex flex-col justify-between group fade-in-ready" data-category="insight" style="transition-delay: 100ms;">
+                    <div class="space-y-6">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500">
+                            <i data-lucide="lightbulb" class="w-6 h-6"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-xl font-bold text-white group-hover:text-brandPoint transition">생각등대</h3>
+                            <p class="text-xs text-brandPoint font-semibold">복잡한 일상 속 생각의 지표</p>
+                        </div>
+                        <p class="text-brandTextMuted text-sm leading-relaxed">
+                            막막하고 복잡한 일상의 고민들, 커리어의 흔들림을 논리적이면서도 명쾌한 기저를 바탕으로 가볍게 위로해주는 명품 힐링 채널입니다.
+                        </p>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-xs text-brandTextMuted">인호의 한줄평: 마음 복잡할 때 처방전</span>
+                        <button onclick="showInsightAlert('생각등대', '생각을 비우고 핵심만 짚어내 깊은 위로를 전하는 명품 오디오북형 콘텐츠입니다.')" class="text-xs font-semibold text-brandPoint flex items-center gap-1 hover:underline">
+                            메모 <i data-lucide="sticky-note" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Insight 2: 면접왕 이형 -->
+                <div class="curation-card bg-brandCard rounded-3xl p-8 border border-white/5 hover:border-brandPoint/20 transition-all duration-300 flex flex-col justify-between group fade-in-ready" data-category="insight" style="transition-delay: 200ms;">
+                    <div class="space-y-6">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-500">
+                            <i data-lucide="award" class="w-6 h-6"></i>
+                        </div>
+                        <div class="space-y-2">
+                            <h3 class="text-xl font-bold text-white group-hover:text-brandPoint transition">면접왕 이형</h3>
+                            <p class="text-xs text-brandPoint font-semibold">인사 기획자 관점의 실전 가이드</p>
+                        </div>
+                        <p class="text-brandTextMuted text-sm leading-relaxed">
+                            기업과 인사담당자의 관점에서 면접 및 자소서 대비 방향성을 극명하게 제시해 주어 제 취준 방향에 큰 영감을 준 채널입니다.
+                        </p>
+                    </div>
+                    <div class="pt-6 mt-6 border-t border-white/5 flex items-center justify-between">
+                        <span class="text-xs text-brandTextMuted">인호의 한줄평: 필살기 자소서 바이블</span>
+                        <button onclick="showInsightAlert('면접왕 이형', '단순 답변이 아닌 필살기 경험 구조화 공식을 가장 명료하게 다루는 최고의 커리어 채널입니다.')" class="text-xs font-semibold text-brandPoint flex items-center gap-1 hover:underline">
+                            메모 <i data-lucide="sticky-note" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Guestbook & Outro -->
+    <section id="guestbook" class="py-24 relative overflow-hidden">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center max-w-2xl mx-auto mb-16 fade-in-ready">
+                <i data-lucide="sparkles" class="w-8 h-8 text-brandPoint mx-auto mb-4 animate-pulse"></i>
+                <h2 class="text-3xl font-black text-white mb-4">당신의 인생작은 무엇인가요?</h2>
+                <p class="text-brandTextMuted">
+                    제 공간을 빛내준 음악이나 추천 영상들을 어떻게 보셨나요? 혹은 혼자 알기 아까운 인호님만의 비밀 플레이리스트가 있다면 편하게 남겨주세요!
+                </p>
+            </div>
+
+            <!-- Interactive Comment/Guestbook Box -->
+            <div class="bg-brandCard rounded-3xl p-8 border border-white/5 shadow-2xl space-y-6 fade-in-ready">
+                <form id="commentForm" onsubmit="addComment(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-brandTextMuted uppercase tracking-wider mb-2" for="guestName">이름 / 닉네임</label>
+                            <input type="text" id="guestName" required class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brandPoint transition" placeholder="방문자 명">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-brandTextMuted uppercase tracking-wider mb-2" for="guestRecommend">인호에게 추천할 음악/콘텐츠</label>
+                            <input type="text" id="guestRecommend" class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brandPoint transition" placeholder="추천작 이름">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-brandTextMuted uppercase tracking-wider mb-2" for="guestMsg">메시지</label>
+                        <textarea id="guestMsg" rows="3" required class="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-brandPoint transition resize-none" placeholder="따뜻한 말 한마디 혹은 공간 방명록을 적어주세요!"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-4 bg-brandPoint hover:bg-brandPointHover text-white rounded-xl text-sm font-bold tracking-wider uppercase transition shadow-lg shadow-brandPoint/20 flex items-center justify-center gap-2">
+                        방명록 서명하기 <i data-lucide="send" class="w-4 h-4"></i>
+                    </button>
+                </form>
+
+                <!-- Saved Comments List -->
+                <div class="pt-6 border-t border-white/10 space-y-4">
+                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                        <i data-lucide="message-square" class="w-4 h-4 text-brandPoint"></i>
+                        실시간 한 줄 소통공간 <span id="commentCount" class="text-xs bg-brandPoint/20 text-brandPoint px-2 py-0.5 rounded-full">3</span>
+                    </h3>
+                    
+                    <div id="commentsContainer" class="space-y-3 max-h-60 overflow-y-auto pr-2">
+                        <!-- Comment 1 -->
+                        <div class="p-4 bg-neutral-900/50 border border-white/5 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold text-white">미니멀리스트_K</span>
+                                <span class="text-brandTextMuted">방금 전</span>
+                            </div>
+                            <p class="text-sm text-brandText">양홍원의 rose 진짜 좋아했는데 플레이리스트 큐레이션 보법이 남다르시네요.. 자주 올게요!</p>
+                            <div class="text-[11px] text-brandPoint font-semibold">추천작: ASH ISLAND - 멜로디</div>
+                        </div>
+
+                        <!-- Comment 2 -->
+                        <div class="p-4 bg-neutral-900/50 border border-white/5 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold text-white">취준러</span>
+                                <span class="text-brandTextMuted">1시간 전</span>
+                            </div>
+                            <p class="text-sm text-brandText">면접왕 이형 보고 자소서 뜯어고치는 중입니다. 이인호님 화이팅 우리 꼭 취뽀해요!</p>
+                            <div class="text-[11px] text-brandPoint font-semibold">추천작: 면접왕 이형 - 경험 분해 영상</div>
+                        </div>
+
+                        <!-- Comment 3 -->
+                        <div class="p-4 bg-neutral-900/50 border border-white/5 rounded-xl space-y-1">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-bold text-white">알고리즘유목민</span>
+                                <span class="text-brandTextMuted">3시간 전</span>
+                            </div>
+                            <p class="text-sm text-brandText">안원잘부 영상 추천 진짜 신의한수 ㅋㅋㅋ 시간 순삭 맞네요! 기획력 최겁니다.</p>
+                            <div class="text-[11px] text-brandPoint font-semibold">추천작: 피식대학 서준맘</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-black border-t border-white/5 text-center text-brandTextMuted text-xs space-y-4">
+        <div class="flex justify-center space-x-6 text-sm mb-4">
+            <a href="#" class="hover:text-white transition"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+            <a href="#" class="hover:text-white transition"><i data-lucide="github" class="w-5 h-5"></i></a>
+            <a href="#" class="hover:text-white transition"><i data-lucide="mail" class="w-5 h-5"></i></a>
+        </div>
+        <p>© 2026 이인호. All rights reserved.</p>
+        <p class="text-[10px] text-neutral-600">Designed with passion for ultimate media curation & warm cozyness.</p>
+    </footer>
+
+    <!-- HIDDEN REAL YOUTUBE PLAYER CONTAINER -->
+    <div class="absolute top-0 left-0 w-1 h-1 opacity-0 pointer-events-none">
+        <div id="yt-hidden-player"></div>
+    </div>
+
+    <!-- INTERACTIVE REAL MUSIC PLAYER BAR -->
+    <div id="musicPlayerBar" class="fixed bottom-0 left-0 w-full z-50 glass-card border-t border-white/10 px-6 py-4 flex items-center justify-between transition-all duration-500 translate-y-full opacity-0">
+        <div class="flex items-center gap-4 max-w-xs sm:max-w-md">
+            <!-- Vinyl art in player bar -->
+            <div class="w-12 h-12 rounded-full bg-neutral-900 border border-white/10 flex items-center justify-center relative overflow-hidden shrink-0">
+                <img id="playerCoverImg" src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=100&auto=format&fit=crop&q=60" alt="Album Cover" class="w-full h-full object-cover spin-animation paused-spin">
+                <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                    <div class="w-3 h-3 rounded-full bg-neutral-900 border border-brandPoint"></div>
+                </div>
+            </div>
+            <div>
+                <h4 id="playerTitle" class="text-sm font-bold text-white truncate">Title</h4>
+                <p id="playerArtist" class="text-xs text-brandTextMuted truncate">Artist</p>
+            </div>
+        </div>
+
+        <!-- Wave / Progress bar section -->
+        <div class="hidden sm:flex items-center gap-6 flex-1 max-w-xl px-12">
+            <!-- Live Soundwave Animation Bars -->
+            <div id="soundwave-container" class="flex items-end gap-1 h-6">
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+                <div class="wave-bar"></div>
+            </div>
+            
+            <div class="flex-1 space-y-1">
+                <!-- Clickable Progress Bar -->
+                <div id="progressContainer" class="w-full h-1 bg-neutral-800 rounded-full relative cursor-pointer" onclick="clickProgressBar(event)">
+                    <div id="playerProgressLine" class="h-full bg-brandPoint rounded-full transition-all duration-100" style="width: 0%;"></div>
+                </div>
+                <div class="flex justify-between text-[10px] text-brandTextMuted">
+                    <span id="playerCurrentTime">0:00</span>
+                    <span id="playerTotalTime">0:00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- Play / Pause Buttons -->
+            <button onclick="togglePlayState()" class="w-10 h-10 rounded-full bg-white text-black hover:scale-105 active:scale-95 transition flex items-center justify-center shadow-lg">
+                <i id="playBtnIcon" data-lucide="play" class="w-5 h-5 fill-current text-black"></i>
+            </button>
+            <button onclick="closePlayer()" class="text-brandTextMuted hover:text-white transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modals & Dialogs (Alerts / Popups) -->
+    
+    <!-- 1. Insight Note Modal -->
+    <div id="insightModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-brandCard max-w-sm w-full rounded-3xl border border-white/10 p-6 shadow-2xl relative space-y-4">
+            <div class="flex items-start gap-4">
+                <div class="p-3 bg-brandPoint/10 text-brandPoint rounded-xl">
+                    <i data-lucide="sticky-note" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h3 id="insightModalTitle" class="text-lg font-bold text-white">Insight Channel</h3>
+                    <p id="insightModalDesc" class="text-xs text-brandTextMuted mt-2 leading-relaxed">Description goes here.</p>
+                </div>
+            </div>
+            <button onclick="closeInsightModal()" class="w-full py-3 bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold rounded-xl transition">
+                확인
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. Message Notification Alert Toast -->
+    <div id="notificationToast" class="fixed bottom-6 right-6 z-50 glass-card px-5 py-4 rounded-2xl border border-brandPoint/30 flex items-center gap-3 text-white transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none">
+        <div class="w-8 h-8 rounded-full bg-brandPoint/20 text-brandPoint flex items-center justify-center shrink-0">
+            <i data-lucide="check-circle" class="w-5 h-5"></i>
+        </div>
+        <div>
+            <p class="text-xs font-bold">성공적으로 등록되었습니다!</p>
+            <p class="text-[10px] text-brandTextMuted">인호님의 취향 서재에 영감이 한 조각 더해졌습니다.</p>
+        </div>
+    </div>
+
+    <!-- Scripting for advanced interactive components -->
+    <script>
+        // Load YouTube IFrame Player API dynamically
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var ytPlayer;
+        var ytPlayerReady = false;
+
+        // Callback when API is fully loaded
+        function onYouTubeIframeAPIReady() {
+            ytPlayer = new YT.Player('yt-hidden-player', {
+                height: '1',
+                width: '1',
+                videoId: '', // Will load dynamically
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'modestbranding': 1,
+                    'rel': 0,
+                    'autoplay': 0
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            ytPlayerReady = true;
+        }
+
+        function onPlayerStateChange(event) {
+            // YT.PlayerState.ENDED = 0, PLAYING = 1, PAUSED = 2
+            if (event.data == YT.PlayerState.ENDED) {
+                isPlaying = false;
+                updatePlayerUIState();
+            } else if (event.data == YT.PlayerState.PLAYING) {
+                isPlaying = true;
+                updatePlayerUIState();
+            } else if (event.data == YT.PlayerState.PAUSED) {
+                isPlaying = false;
+                updatePlayerUIState();
+            }
+        }
+
+        // Quiz state management
+        const quizData = [
+            {
+                question: "나의 새벽 감성을 촉촉하게 적셔줄 최애 장르는?",
+                options: [
+                    { text: "밤안개 가득한 보이스와 감성 짙은 R&B/힙합", match: 100 },
+                    { text: "어쿠스틱 감성 충만한 잔잔한 인디 발라드", match: 70 },
+                    { text: "드라이브하며 들을 수 있는 신나고 청량한 장르", match: 50 }
+                ]
+            },
+            {
+                question: "유튜브 알고리즘을 볼 때 내가 선호하는 테마는?",
+                options: [
+                    { text: "B급 자막 감성과 날 것 그대로의 크리에이터 케미", match: 100 },
+                    { text: "인생을 단단하게 채워줄 커리어 가이드 및 동기부여", match: 85 },
+                    { text: "가볍게 보고 지나칠 수 있는 단순 유머 클립", match: 60 }
+                ]
+            },
+            {
+                question: "넷플릭스나 영화 인생작을 선택하는 나의 기준은?",
+                options: [
+                    { text: "마음에 긴 여운을 남기는 섬세한 연출과 세련된 미장센", match: 100 },
+                    { text: "머리를 비우고 깊이 몰입할 수 있는 스피디한 액션/스릴러", match: 75 },
+                    { text: "친구들과 왁자지껄 웃으며 편하게 볼 수 있는 팝콘 무비", match: 60 }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let totalScore = 0;
+
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            
+            // Trigger Hero element animations on load
+            setTimeout(() => { document.getElementById('hero-badge').classList.add('fade-in-visible'); }, 100);
+            setTimeout(() => { document.getElementById('hero-title').classList.add('fade-in-visible'); }, 250);
+            setTimeout(() => { document.getElementById('hero-desc').classList.add('fade-in-visible'); }, 400);
+            setTimeout(() => { document.getElementById('hero-btns').classList.add('fade-in-visible'); }, 550);
+
+            // Handle Scroll Animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if(entry.isIntersecting) {
+                        entry.target.classList.add('fade-in-visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in-ready').forEach(el => {
+                observer.observe(el);
+            });
+
+            // Load first question
+            loadQuestion();
+        });
+
+        // Toggle Cinema Mode
+        function toggleCinemaMode() {
+            const body = document.body;
+            const icon = document.getElementById('cinemaIcon');
+            body.classList.toggle('cinema-mode');
+            
+            if(body.classList.contains('cinema-mode')) {
+                icon.setAttribute('data-lucide', 'moon');
+                icon.parentElement.classList.add('bg-brandPoint/15', 'text-brandPoint');
+            } else {
+                icon.setAttribute('data-lucide', 'lightbulb');
+                icon.parentElement.classList.remove('bg-brandPoint/15', 'text-brandPoint');
+            }
+            lucide.createIcons();
+        }
+
+        // Navigation Anchor Scroll
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if(section) {
+                const headerOffset = 64; 
+                const elementPosition = section.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Quiz Logic
+        function loadQuestion() {
+            const qData = quizData[currentQuestionIndex];
+            document.getElementById('questionStep').textContent = `Question 0${currentQuestionIndex + 1} of 03`;
+            document.getElementById('questionTitle').textContent = qData.question;
+            
+            const progressPercent = ((currentQuestionIndex + 1) / quizData.length) * 100;
+            document.getElementById('quizProgress').style.width = `${progressPercent}%`;
+
+            const optionsContainer = document.getElementById('quizOptions');
+            optionsContainer.innerHTML = '';
+
+            qData.options.forEach((opt, idx) => {
+                const button = document.createElement('button');
+                button.className = "w-full text-left p-5 rounded-2xl bg-neutral-900 border border-white/5 hover:border-brandPoint/40 hover:bg-white/5 text-sm text-brandText transition-all duration-300 flex justify-between items-center group";
+                button.innerHTML = `
+                    <span>${opt.text}</span>
+                    <span class="w-5 h-5 rounded-full border border-white/20 group-hover:border-brandPoint flex items-center justify-center text-[10px] text-transparent group-hover:text-brandPoint transition">✓</span>
+                `;
+                button.onclick = () => selectOption(opt.match);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(matchScore) {
+            totalScore += matchScore;
+            
+            if(currentQuestionIndex < quizData.length - 1) {
+                currentQuestionIndex++;
+                loadQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            const finalPercent = Math.round(totalScore / quizData.length);
+            document.getElementById('quizStepContent').classList.add('hidden');
+            
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.classList.remove('hidden');
+
+            document.getElementById('resultScore').textContent = `${finalPercent}%`;
+
+            const titleEl = document.getElementById('resultTitle');
+            const descEl = document.getElementById('resultDesc');
+
+            if(finalPercent >= 90) {
+                titleEl.textContent = "영혼의 취향 쌍둥이! 💥";
+                descEl.textContent = `싱크로율 ${finalPercent}%! 인호님의 특별 플레이리스트와 힙한 예능 코드를 완벽히 이해하는 소울메이트이시군요. 취향 상자의 모든 콘텐츠를 마스터해 보세요!`;
+            } else if(finalPercent >= 70) {
+                titleEl.textContent = "감성 충만한 취향 동반자 🎧";
+                descEl.textContent = `싱크로율 ${finalPercent}%! 인호님의 새벽 감성 R&B 곡들과 생각등대 가이드를 즐기기에 충분히 세련된 시야를 가지고 계십니다.`;
+            } else {
+                titleEl.textContent = "새로운 세계를 마주한 탐험가 🗺️";
+                descEl.textContent = `싱크로율 ${finalPercent}%! 조금 더 트렌디하고 날 것 그대로의 위트를 접할 기회입니다. 인호님의 음악과 최애 영상으로 새로운 취향 지도를 그려보세요.`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            totalScore = 0;
+            document.getElementById('quizStepContent').classList.remove('hidden');
+            document.getElementById('quizResult').classList.add('hidden');
+            loadQuestion();
+        }
+
+        // Curation filter logic
+        function filterCuration(category) {
+            const tabs = document.querySelectorAll('.curation-tab-btn');
+            tabs.forEach(tab => {
+                tab.classList.remove('active', 'bg-brandPoint', 'text-white');
+                tab.classList.add('text-brandTextMuted');
+            });
+            event.target.classList.add('active', 'bg-brandPoint', 'text-white');
+            event.target.classList.remove('text-brandTextMuted');
+
+            const cards = document.querySelectorAll('.curation-card');
+            cards.forEach(card => {
+                const cardCat = card.getAttribute('data-category');
+                if(category === 'all' || cardCat === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        // Live bottom Music Player Bar logic (REAL YOUTUBE INTEGRATION)
+        let playInterval;
+        let isPlaying = false;
+        let currentVideoId = "";
+
+        function playSong(artist, title, imgUrl, videoId) {
+            const playerBar = document.getElementById('musicPlayerBar');
+            document.getElementById('playerTitle').textContent = title;
+            document.getElementById('playerArtist').textContent = artist;
+            document.getElementById('playerCoverImg').src = imgUrl;
+
+            // Show player bar smoothly
+            playerBar.classList.remove('translate-y-full', 'opacity-0');
+
+            if (ytPlayerReady && ytPlayer) {
+                if (currentVideoId !== videoId) {
+                    currentVideoId = videoId;
+                    ytPlayer.loadVideoById(videoId);
+                } else {
+                    ytPlayer.playVideo();
+                }
+                isPlaying = true;
+                updatePlayerUIState();
+                startProgressSync();
+            }
+        }
+
+        function togglePlayState() {
+            if (!ytPlayerReady || !ytPlayer) return;
+
+            if (isPlaying) {
+                ytPlayer.pauseVideo();
+                isPlaying = false;
+            } else {
+                ytPlayer.playVideo();
+                isPlaying = true;
+            }
+            updatePlayerUIState();
+        }
+
+        function updatePlayerUIState() {
+            const playIcon = document.getElementById('playBtnIcon');
+            const disc = document.getElementById('playerCoverImg');
+            const waveBars = document.querySelectorAll('.wave-bar');
+
+            if (isPlaying) {
+                playIcon.setAttribute('data-lucide', 'pause');
+                disc.classList.remove('paused-spin');
+                // Resume wave animation
+                waveBars.forEach(bar => bar.style.animationPlayState = 'running');
+                startProgressSync();
+            } else {
+                playIcon.setAttribute('data-lucide', 'play');
+                disc.classList.add('paused-spin');
+                // Pause wave animation
+                waveBars.forEach(bar => bar.style.animationPlayState = 'paused');
+                clearInterval(playInterval);
+            }
+            lucide.createIcons();
+        }
+
+        function startProgressSync() {
+            clearInterval(playInterval);
+            playInterval = setInterval(() => {
+                if (ytPlayerReady && ytPlayer && isPlaying) {
+                    const currentTime = ytPlayer.getCurrentTime();
+                    const duration = ytPlayer.getDuration();
+                    
+                    if (duration > 0) {
+                        const progressPercent = (currentTime / duration) * 100;
+                        document.getElementById('playerProgressLine').style.width = `${progressPercent}%`;
+                        
+                        // Update timing text
+                        document.getElementById('playerCurrentTime').textContent = formatTime(currentTime);
+                        document.getElementById('playerTotalTime').textContent = formatTime(duration);
+                    }
+                }
+            }, 500);
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function clickProgressBar(event) {
+            if (!ytPlayerReady || !ytPlayer) return;
+            const progressContainer = document.getElementById('progressContainer');
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const clickPercent = clickX / rect.width;
+            
+            const duration = ytPlayer.getDuration();
+            if (duration > 0) {
+                const targetTime = duration * clickPercent;
+                ytPlayer.seekTo(targetTime, true);
+                document.getElementById('playerProgressLine').style.width = `${clickPercent * 100}%`;
+                document.getElementById('playerCurrentTime').textContent = formatTime(targetTime);
+            }
+        }
+
+        function closePlayer() {
+            if (ytPlayerReady && ytPlayer) {
+                ytPlayer.stopVideo();
+            }
+            const playerBar = document.getElementById('musicPlayerBar');
+            playerBar.classList.add('translate-y-full', 'opacity-0');
+            isPlaying = false;
+            clearInterval(playInterval);
+            updatePlayerUIState();
+        }
+
+        // Insight modal control
+        function showInsightAlert(title, content) {
+            document.getElementById('insightModalTitle').textContent = title;
+            document.getElementById('insightModalDesc').textContent = content;
+
+            const modal = document.getElementById('insightModal');
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeInsightModal() {
+            const modal = document.getElementById('insightModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Comment Live Interaction
+        function addComment(event) {
+            event.preventDefault();
+            const name = document.getElementById('guestName').value.trim();
+            const recommend = document.getElementById('guestRecommend').value.trim();
+            const message = document.getElementById('guestMsg').value.trim();
+
+            if (!name || !message) return;
+
+            const container = document.getElementById('commentsContainer');
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'p-4 bg-brandPoint/5 border border-brandPoint/20 rounded-xl space-y-1 transform scale-95 opacity-0 transition-all duration-500';
+            
+            commentDiv.innerHTML = `
+                <div class="flex items-center justify-between text-xs">
+                    <span class="font-bold text-white flex items-center gap-1">
+                        <span class="w-1.5 h-1.5 rounded-full bg-brandPoint"></span>
+                        ${name}
+                    </span>
+                    <span class="text-brandPoint font-semibold">방금 전</span>
+                </div>
+                <p class="text-sm text-brandText">${message}</p>
+                ${recommend ? `<div class="text-[11px] text-brandPoint font-semibold">추천작: ${recommend}</div>` : ''}
+            `;
+
+            container.insertBefore(commentDiv, container.firstChild);
+            
+            setTimeout(() => {
+                commentDiv.classList.remove('scale-95', 'opacity-0');
+            }, 50);
+
+            // Update Counter
+            const countEl = document.getElementById('commentCount');
+            const currentCount = parseInt(countEl.textContent);
+            countEl.textContent = currentCount + 1;
+
+            document.getElementById('commentForm').reset();
+
+            // Show Toast Alert
+            const toast = document.getElementById('notificationToast');
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
